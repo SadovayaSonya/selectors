@@ -1,18 +1,21 @@
+const { faker } = require('@faker-js/faker');
+
 Feature('Selectors');
 
-Scenario('test any selectors',  ({ I }) => {
+Scenario('Регистрация пользователя на OTUS',  ({ I }) => {
+    const randomName = faker.name.firstName();
+    const randomLastName = faker.name.lastName();
+    const randomEmail = faker.internet.email(randomName, randomLastName);
+
     I.amOnPage('/');
-    pause();
-
-    I.waitForVisible(locate('[class*="nav__scroll course-categories__nav-box"]').first());
-    // I.click('//div[@class="button button_white button_white-inverse-transparent button_md-3 button_radius-md None"]');
-    I.click('div[class*="transitional-main"] div[class*="button_white-inverse-transparent"]');
-    // I.waitForClickable('//button[@class="header3__button-sign-in"]');
-    // I.click('//button[@class="header3__button-sign-in"]');
-    // I.click('//*[@data-tab-id="register"]');
-    // I.fillField('input[name=fname][class*=new-input][class*=new-input_full]', 'testUsername');
-    // I.fillField('form[class*="registration"] input[type="email"]', 'testEmail');
-    // I.fillField('/html/body/div[2]/div/div/div/div[3]/div[3]/form/div[2]/div[1]/div[3]/div/input', 'testSecondName');
-
-
+    I.waitForVisible('//button[contains(@class,"sign-up")]');
+    I.click('//button[contains(@class,"sign-up")]');
+    I.waitForVisible('//div[@data-tab-id="register"]');
+    I.click('//div[@data-tab-id="register"]');
+    I.fillField('//input[@placeholder="Имя *"]', randomName);
+    I.fillField('//input[@placeholder="Фамилия"]', randomLastName);
+    I.fillField('//input[@placeholder="Электронная почта *"]', randomEmail);
+    I.click('//button[contains(text(), "Зарегистрироваться")]');
+    I.waitForVisible('//span[contains(@class, "user-info-name")]');
+    I.see(randomName, '//span[contains(@class, "user-info-name")]' );
 });
